@@ -8,7 +8,7 @@ AGENT_IDS=(
   architect planner executor code-reviewer verifier
   product-manager project-manager ui-designer ux-researcher
   backend-developer frontend-developer mini-program-developer
-  mobile-developer ai-engineer devops
+  mobile-developer ai-engineer devops security-reviewer
 )
 
 echo "卸载 deepseek-tui-agency..."

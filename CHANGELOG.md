@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.2] — 2026-05-21
+
+### Added
+
+- **security-reviewer**: 应用安全审查、数据隐私合规、API 安全审计
+- **orchestrator**: 条件触发规则（project-manager/ux-researcher 仅特定条件激活）
+- **orchestrator**: PM 迭代循环流程（提问→回答→补全）
+- **orchestrator**: 开发阶段分支（零代码项目主Agent直接创建 vs 有代码项目委托executor）
+- **orchestrator**: 安全审查节点（数据/API/支付/审核前必须激活）
+
+### Changed
+
+- **orchestrator**: 团队角色表从 15 → 16
+- **orchestrator**: 模型路由表加 security-reviewer
+
 ## [0.1.1] — 2026-05-21
 
 ### Changed

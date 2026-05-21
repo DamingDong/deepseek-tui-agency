@@ -37,6 +37,7 @@ description: Multi-agent orchestration for deepseek-tui. Activates when user nee
 | 👁️ 代码评审 | code-reviewer | PR 评审、安全审查、质量门控 |
 | ✅ 验证测试 | verifier | 测试验证、构建检查、回归测试 |
 | 📐 规划师 | planner | 任务计划制定、验收标准定义 |
+| 🔒 安全审查 | security-reviewer | 数据安全、隐私合规、API 安全审计 |
 | ⚡ 执行者 | executor | 代码实现（默认开发者） |
 
 ## 任务路由规则
@@ -58,6 +59,7 @@ description: Multi-agent orchestration for deepseek-tui. Activates when user nee
 - "测试/验证/构建" → verifier
 - "计划/拆解/步骤" → planner
 - "实现/编码/开发" → executor
+- "安全/隐私/合规/数据泄露/密钥" → security-reviewer
 
 ## agent_open 调用规范
 
@@ -92,6 +94,7 @@ description: Multi-agent orchestration for deepseek-tui. Activates when user nee
 | executor / 领域 developer | deepseek-v4-pro | 写代码需要准确 |
 | code-reviewer | deepseek-v4-pro | 安全审查需要细致 |
 | verifier | deepseek-v4-flash | 运行命令 + 验证，低推理需求 |
+| security-reviewer | deepseek-v4-pro | 安全审计需要细致推理 |
 | devops | deepseek-v4-flash | 配置类任务 |
 
 激活 Agent 时按上表选择 model 参数。子代理超时后降级为主 Agent 直接输出。
@@ -102,6 +105,39 @@ description: Multi-agent orchestration for deepseek-tui. Activates when user nee
 - 子代理超时（>120s 无输出）→ 关闭并降级为主 Agent 直接输出
 - 需要多轮交互的任务（如需求讨论、方向判断）→ 不用子代理，主 Agent 直接和用户对话
 - 重开 Agent 时，把上一轮完整输出拼入新 prompt，保持上下文连续性
+
+## 条件触发规则
+
+某些角色只在特定条件下激活：
+
+- **project-manager**：仅在「多 Sprint 项目、多人协同、需持续跟踪进度」时激活。
+  单 Sprint 或小项目（≤5 个任务），主 Agent 直接用 checklist_write 跟踪。
+- **ux-researcher**：仅在「已有用户数据、需优化转化率/留存、进行可用性测试」时激活。
+  MVP 或 0→1 项目不激活，PM Agent 在 PRD 中已覆盖基本用户分析。
+
+## PM 迭代循环
+
+PM Agent 首次输出含提问时：
+1. 主 Agent 将提问呈现给用户
+2. 用户回答后，重开 PM Agent，把上一轮完整输出 + 用户回答拼入新 prompt
+3. PM 基于反馈补全 PRD
+
+## 开发阶段分支
+
+**零代码项目（新建项目）**：
+- 主 Agent 直接创建项目文件和骨架代码
+- 不委托 executor（executor 适合修改已有代码）
+
+**有代码项目**：
+- 委托 executor 按计划实现变更
+
+## 安全审查节点
+
+在以下节点激活 security-reviewer：
+- 涉及用户数据存储和传输
+- 集成第三方 API（外部数据调用）
+- 接入支付功能
+- 提交微信审核前
 
 ## Handoff 协议
 
@@ -148,6 +184,10 @@ description: Multi-agent orchestration for deepseek-tui. Activates when user nee
 - 有依赖关系的串行执行（先架构设计，再编码；先编码，再评审）
 - 使用 agent_open 时，无依赖的任务在同一轮中并行发送
 - 最多同时 4 个活跃子 Agent
+
+## 并行策略
+
+与上相同，不重复。
 
 ## 项目启动流程
 

@@ -65,6 +65,7 @@
 |-------|------|---------|
 | 👁️ code-reviewer | 代码评审、PR 审查 | 评审报告（🔴/🟡/💭 分级 + 修复建议） |
 | ✅ verifier | 测试、验证、构建 | 验证报告（PASS/FAIL + 测试证据） |
+| 🔒 security-reviewer | 安全/隐私/合规 | 安全审查报告（🔴/🟡/💭 + 攻击场景 + 修复方案） |
 
 ### 交付
 
@@ -88,6 +89,7 @@
 | frontend-developer | deepseek-v4-pro | medium |
 | mobile-developer | deepseek-v4-pro | medium |
 | mini-program-developer | deepseek-v4-pro | medium |
+| security-reviewer | deepseek-v4-pro | high |
 | verifier | deepseek-v4-pro | medium |
 | project-manager | deepseek-v4-pro | low |
 | devops | deepseek-v4-pro | low |
