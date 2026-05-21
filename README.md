@@ -5,7 +5,7 @@
 ## 安装
 
 ```bash
-git clone https://github.com/terryddm/deepseek-tui-agency ~/deepseek-tui-agency
+git clone https://github.com/DamingDong/deepseek-tui-agency ~/deepseek-tui-agency
 cd ~/deepseek-tui-agency
 bash install.sh
 ```
