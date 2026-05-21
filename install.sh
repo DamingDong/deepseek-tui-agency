@@ -16,7 +16,8 @@ mkdir -p "$DST_AGENTS"
 for agent_dir in "$SCRIPT_DIR"/agents/*/; do
   name=$(basename "$agent_dir")
   if [ -d "$agent_dir" ] && [ -f "${agent_dir}agent.toml" ]; then
-    cp -r "$agent_dir" "$DST_AGENTS/"
+    rm -rf "$DST_AGENTS/$name" 2>/dev/null
+    cp -r "$agent_dir" "$DST_AGENTS/$name"
     ok "  agents/$name"
   fi
 done
@@ -27,7 +28,8 @@ mkdir -p "$DST_SKILLS"
 for skill_dir in "$SCRIPT_DIR"/skills/*/; do
   name=$(basename "$skill_dir")
   if [ -d "$skill_dir" ] && [ -f "${skill_dir}SKILL.md" ]; then
-    cp -r "$skill_dir" "$DST_SKILLS/"
+    rm -rf "$DST_SKILLS/$name" 2>/dev/null
+    cp -r "$skill_dir" "$DST_SKILLS/$name"
     ok "  skills/$name"
   fi
 done
