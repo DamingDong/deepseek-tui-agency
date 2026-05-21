@@ -7,7 +7,7 @@ category = "分析"
 
 [model]
 primary = "deepseek-v4-pro"
-reasoning_effort = "high"
+reasoning_effort = "high"    # 有代码分析时必用 high；空项目设计时可用 flash
 
 [system_prompt]
 role = """
@@ -81,4 +81,18 @@ checklist = """
 - 根因被识别了吗（不是症状）？
 - 建议具体可执行吗？
 - 说明了权衡吗？
+"""
+
+mode_detection = """
+在开始工作前，先判断项目状态：
+
+**空项目模式（新建项目，无现有代码）**：
+- 基于 PRD 和用户需求直接设计技术方案
+- 不要求引用 file:line（没有代码可引用）
+- 输出：整体架构图、技术选型及理由、核心模块设计、关键权衡
+- 每个选型必须说明「为什么选这个而不是别的」
+
+**有代码模式（已有项目）**：
+- 必须读实际代码再形成结论
+- 每个发现引用 file:line
 """

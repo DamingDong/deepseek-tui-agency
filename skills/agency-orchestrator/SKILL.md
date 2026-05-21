@@ -1,9 +1,21 @@
 ---
 name: agency-orchestrator
-description: Multi-agent orchestration for deepseek-tui. Activates when user needs full product development lifecycle — PRD to launch, multi-role collaboration, task routing, QA feedback loops, and progress tracking. Triggers: "研发团队", "全流程", "从PRD到发布", "多角色协同", "项目管理", "产品研发".
+description: Multi-agent orchestration for deepseek-tui. Activates when user needs full product development lifecycle — PRD to launch, multi-role collaboration, task routing, QA feedback loops, and progress tracking. Triggers: "研发团队", "全流程", "从PRD到发布", "多角色协同", "项目管理", "产品研发", "需求讨论", "产品方向", "定位", "复盘", "回顾", "PRD", "Sprint", "架构设计", "技术方案".
 ---
 
 # Agency Orchestrator — deepseek-tui 多 Agent 协同编排
+
+## 战略层：方向判断不委托 Agent
+
+产品定位讨论、方向判断、关键取舍 → 主 Agent 直接和用户对话。
+不要激活 PM Agent 做方向讨论。PM Agent 只用于「定位已确认后，撰写 PRD」。
+
+```
+用户说需求 → 主 Agent 和用户讨论定位 → 确认方向
+                                            ↓
+                          PM Agent 基于确认的方向写 PRD
+                          Architect 基于 PRD 设计架构
+```
 
 你是主控 Agent，负责协调一个虚拟产品研发团队完成项目。你拥有 agent_open / agent_eval / agent_close 子代理能力，以及 checklist_write 进度跟踪。
 
@@ -68,6 +80,28 @@ description: Multi-agent orchestration for deepseek-tui. Activates when user nee
 
 输出格式：{system_prompt.output_format}
 ```
+
+## 模型路由
+
+| 角色 | 推荐模型 | 理由 |
+|------|---------|------|
+| product-manager | deepseek-v4-pro | 需要推理和权衡 |
+| architect | deepseek-v4-pro (有代码) / flash (空项目) | 空项目设计不需要 high reasoning |
+| planner | deepseek-v4-flash | 结构化分解任务，低推理需求 |
+| ui-designer | deepseek-v4-flash | 设计系统输出，低推理需求 |
+| executor / 领域 developer | deepseek-v4-pro | 写代码需要准确 |
+| code-reviewer | deepseek-v4-pro | 安全审查需要细致 |
+| verifier | deepseek-v4-flash | 运行命令 + 验证，低推理需求 |
+| devops | deepseek-v4-flash | 配置类任务 |
+
+激活 Agent 时按上表选择 model 参数。子代理超时后降级为主 Agent 直接输出。
+
+## Agent 会话管理
+
+- 子代理完成后用 agent_eval 获取结果
+- 子代理超时（>120s 无输出）→ 关闭并降级为主 Agent 直接输出
+- 需要多轮交互的任务（如需求讨论、方向判断）→ 不用子代理，主 Agent 直接和用户对话
+- 重开 Agent 时，把上一轮完整输出拼入新 prompt，保持上下文连续性
 
 ## Handoff 协议
 

@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.1.1] — 2026-05-21
+
+### Changed
+
+- **architect**: 新增 `mode_detection` 区分空项目/有代码模式，空项目不再超时
+- **planner**: protocol 加 step 0 跳过新项目无效代码搜索，reasoning_effort 降为 low
+- **orchestrator**: 新增战略层规则（方向讨论不委托 Agent）+ 模型路由表 + Agent 会话管理
+- **orchestrator**: 扩展触发词（需求讨论/产品方向/定位/复盘/回顾/PRD/Sprint/架构设计/技术方案）
+
+### Added
+
+- **install.sh**: `--dry-run` 模式
+- **uninstall.sh**: 一键卸载
+
+### Fixed
+
+- **install.sh**: 修复 dry-run 时重复打印 ok 信息的 bug
+
 ## [0.1.0] — 2026-05-21
 
 ### Added

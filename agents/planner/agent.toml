@@ -7,7 +7,7 @@ category = "管理"
 
 [model]
 primary = "deepseek-v4-pro"
-reasoning_effort = "medium"
+reasoning_effort = "low"     # planner 是结构化任务，不需要高推理，可用 flash
 
 [system_prompt]
 role = """
@@ -35,6 +35,12 @@ constraints = """
 """
 
 protocol = """
+0. 判断项目状态：
+   - 空项目（无现有代码库/从零构建）：跳过代码搜索。
+     不要用 grep_files/read_file 扫描 workspace。
+     基于 PRD + 架构方案直接做 Sprint 分解。
+   - 有现有代码库：用 grep_files/read_file 了解项目结构后再分解。
+
 1. 判断任务类型：简单修复 / 重构 / 从零构建 / 中等规模
 2. 代码事实自己查（用 grep_files / read_file 自己探索项目结构）
 3. 只问用户：优先级、时间线、范围决策、风险偏好
